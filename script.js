@@ -7,7 +7,17 @@
 	var drawnPoints = [];
 	var receivedPoints = [];
 
-	var colorValue = 0x0;
+
+	//var colorValue = 0x0;
+	var colorBlack = "#000000";
+	var colorPurple = "#cb3594";
+	var colorGreen = "#659b41";
+	var colorYellow = "#ffcf33";
+	var colorBrown = "#986928";
+
+	var curColor = colorBlack;
+
+	var newColor = document.getElementById("color");
 
 	var socket = io("http://localhost:8080");
 	socket.on('connect', function() {
@@ -15,12 +25,10 @@
 
 		socket.emit("clear");
 		socket.on('points', redrawAllPoints);
-		socket.on('rect', drawRect);
 		socket.on('clear', clearCanvas);
 	});
 
 	clearButton.addEventListener("click", onClearButtonClicked);
-
 
 	function addListeners() {
 		canvas.addEventListener("mousedown", onCanvasMouseDown);
@@ -28,9 +36,6 @@
 
 		canvas.addEventListener("touchstart", onCanvasTouchBegin);
 		canvas.addEventListener("touchend", onCanvasTouchEnd);
-		canvas.addEventListener('mousemove', ev_mousemove, false);
-
-
 	}
 
 	function clearCanvas() {
@@ -57,7 +62,13 @@
 			ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
 			ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
 			ctx.closePath();
-			ctx.strokeStyle = "black";
+			ctx.strokeStyle = curColor;
+			if (document.getElementById("color").value === "purple") {ctx.strokeStyle = colorPurple;}
+			else if (document.getElementById("color").value === "green") {ctx.strokeStyle = colorGreen;}
+			else if (document.getElementById("color").value === "brown") {ctx.strokeStyle = colorBrown;}
+			else if (document.getElementById("color").value === "yellow") {ctx.strokeStyle = colorYellow;}
+
+
 			ctx.stroke();
 		}
 	}
@@ -78,7 +89,12 @@
 		ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
 		ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
 		ctx.closePath();
-		ctx.strokeStyle = "red";
+		ctx.strokeStyle = curColor;
+		if (document.getElementById("color").value === "purple") {ctx.strokeStyle = colorPurple;}
+		else if (document.getElementById("color").value === "green") {ctx.strokeStyle = colorGreen;}
+		else if (document.getElementById("color").value === "brown") {ctx.strokeStyle = colorBrown;}
+		else if (document.getElementById("color").value === "yellow") {ctx.strokeStyle = colorYellow;}
+
 		ctx.stroke();
 	}
 
@@ -117,83 +133,6 @@
 		transmitLatestPoints();
 	}
 
-	var started = false;
-	function ev_mousemove (ev) {
-		var x, y;
-
-		// Get the mouse position relative to the <canvas> element
-		if (ev.layerX || ev.layerX == 0) { // Firefox
-			x = ev.layerX;
-			y = ev.layerY;
-		} else if (ev.offsetX || ev.offsetX == 0) { // Opera
-			x = ev.offsetX;
-			y = ev.offsetY;
-		}
-
-	var tool = false;
-	var tool_default = 'rect';
-
-	function init () {
-		// Get the tool select input
-		var tool_select = document.getElementById('dtool');
-		if (!tool_select) {
-			alert('Error: failed to get the dtool element!');
-			return;
-		}
-		tool_select.addEventListener('change', ev_tool_change, false);
-
-		// Activate the default tool.
-		if (tools[tool_default]) {
-			tool = new tools[tool_default]();
-			tool_select.value = tool_default;
-		}
-	}
-
-	function ev_tool_change (ev) {
-	if (tools[this.value]) {
-		tool = new tools[this.value]();
-	}
-}
-
-// This object holds the implementation of each drawing tool
-var tools = {};
-
-tools.rect = function () {
-	var tool = this;
-	this.started = false;
-
-	this.mousedown = function (ev) {
-		tool.started = true;
-		tool.x0 = ev._x;
-		tool.y0 = ev._y;
-	};
-
-	this.mousemove = function (ev) {
-		if (!tool.started) {
-			return;
-		}
-
-		var x = Math.min(ev._x,	tool.x0),
-			y = Math.min(ev._y,	tool.y0),
-			w = Math.abs(ev._x - tool.x0),
-			h = Math.abs(ev._y - tool.y0);
-
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
-		if (!w || !h) {
-			return;
-		}
-
-		context.strokeRect(x, y, w, h);
-	};
-
-	this.mouseup = function (ev) {
-		if (tool.started) {
-			tool.mousemove(ev);
-			tool.started = false;
-		}
-	};
-};
 	function onCanvasMouseUp(event) {
 		canvas.removeEventListener("mousemove", onCanvasMouseMove);
 	}
@@ -262,6 +201,36 @@ tools.rect = function () {
 				var $nickBox = $('#nickname');
 				var $users = $("#users");
 				
+
+				var currPosition = 0;
+				var slideWidth = 500;
+				var slides = $('.slide');
+				var numberOfSlides = slides.length;
+				var slideInterval;
+				var speed = 3000;
+
+				slideInterval = setInterval(changePosition, speed);
+
+				slides.wrapAll('<div id="slidesHolder"></div>')
+
+				slides.css({ 'float' : 'left' });
+
+				$('#slidesHolder').css('width', slideWidth * numberOfSlides);
+
+				function changePosition() {
+					if(currPosition == numberOfSlides - 1) {
+						currPosition = 0;
+					} else {
+						currPosition++;
+					}
+					moveSlide();
+				}
+
+				function moveSlide() {
+					$('#slidesHolder')
+					.animate({'marginLeft' : slideWidth*(-currPosition)});
+				}
+
 				$messageForm.submit(function(e){
 					e.preventDefault();
 					socket.emit('send message', $messageBox.val());
@@ -275,6 +244,7 @@ tools.rect = function () {
 							if (data) {
 								$('#nickWrap').hide();
 								$('#contentWrap').show();
+								$('#contentWrap2').show();
 							}else{
 								$nickError.html("Already taken, choose another, idiot!)")
 							}

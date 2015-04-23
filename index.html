@@ -7,24 +7,54 @@
 		<script src="socket.io-1.1.0.js"></script>	</head>
 
 	<body>
-		<div class="buttonWrap">
-			<a id="save">Download the canvas</a>
-			<input type="button" value="Clear All" class="clear_button" id="clear_all_button">
+		<div id = "contentWrap2">
+			<div class="buttonWrap">
+				<a id="save">Download the canvas</a>
+				<input type="button" value="Clear All" class="clear_button" id="clear_all_button">
+			</div>
+			<label>Drawing tool:
+				<select id="dtool">
+					<option value="pencil">Pencil</option>
+					<option value="rect">Rectangle</option>
+					<option value="circle">Circle</option>
+					<option value="pencil">Line</option>
+				</select>
+			</label>
+			<label>Colors:
+				<select id="color">
+					<option value="black">Black</option>
+					<option value="green">Green</option>
+					<option value="brown">Brown</option>
+					<option value="yellow">Yellow</option>
+					<option value="purple">Purple</option>
+				</select>
+			</label>
+			<canvas id="mainCanvas" width="1000" height="600"></canvas>
 		</div>
-		<label>Drawing tool:
-			<select id="dtool">
-				<option value="rect">Rectangle</option>
-				<option value="pencil">Pencil</option>
-			</select>
-		</label>
-		<canvas id="mainCanvas" width="1000" height="600"></canvas>
-
 		<div class="chat-panel">
 			<div id="nickWrap">
-				<p>Enter a username:</p>
+				<h2 class= "center">Welcome to Collaboard</h2>
+				<div id="slideshow">
+					<div id="slideshowWindow">
+
+						<div class="slide">
+							<!-- External image place holder.Learn more from [placehold.it] -->
+							<img src="s1.png" />
+						</div><!--/slide-->
+
+						<div class="slide">
+							<img src="s2.png" />
+						</div><!--/slide-->
+
+						<div class="slide">
+							<img src="s3.png" />
+						</div><!--/slide-->
+					</div><!--/slideshowWindow-->
+				</div><!--/slideshow-->
+				<p class= "center">Enter a username:</p>
 				<form id="setNick">
 					<input size ="25" id="nickname" autocomplete="off" autofocus>
-					<input type="submit">
+					<input type="submit" value= "Get Started!">
 				</form>
 				<p id="nickError"></p>
 			</div>
