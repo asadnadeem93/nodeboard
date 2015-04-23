@@ -96,7 +96,6 @@ body.connected {
   padding: 20px;
 }
 
-
 #chat{
   height: 500px;
   overflow: scroll;
@@ -109,6 +108,9 @@ body.connected {
 #contentWrap{
   display: none;
 
+}
+#contentWrap2{
+  display: none;
 }
 
 input[type=submit] {
@@ -128,6 +130,28 @@ input[type=submit] {
   margin-right: 50px;
  }
 
- span{
-  
- }
+ #slideshow #slideshowWindow {
+  width:500px;
+  height:257px;
+  margin:40px auto;
+  padding:0;
+  position:relative;
+  overflow:hidden;
+}
+
+#slideshow #slideshowWindow .slide {
+  margin:0;
+  padding:0;
+  width:500px; 
+  height:257px;
+  float:left;
+  position:relative;
+}
+
+label{
+  color: white;
+}
+
+a{
+  color: white;
+}

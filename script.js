@@ -15,6 +15,13 @@
 	var colorYellow = "#ffcf33";
 	var colorBrown = "#986928";
 
+	var radS = 1;
+	var radM = 3;
+	var radL = 5;
+	var radXL = 10;
+
+	var curRadious = radS;
+
 	var curColor = colorBlack;
 
 	var newColor = document.getElementById("color");
@@ -62,15 +69,29 @@
 			ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
 			ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
 			ctx.closePath();
+
+			ctx.lineWidth = curRadious;
+
 			ctx.strokeStyle = curColor;
-			if (document.getElementById("color").value === "purple") {ctx.strokeStyle = colorPurple;}
+			setLength();
+			setColor();
+			ctx.stroke();
+		}
+	}
+
+	function setLength(){
+		if (document.getElementById("radious").value === "small") {ctx.lineWidth = radS;}
+			else if (document.getElementById("radious").value === "medium") {ctx.lineWidth = radM;}
+			else if (document.getElementById("radious").value === "large") {ctx.lineWidth = radL;}
+			else if (document.getElementById("radious").value === "xlarge") {ctx.lineWidth = radXL;}
+	}
+	
+
+	function setColor(){
+		if (document.getElementById("color").value === "purple") {ctx.strokeStyle = colorPurple;}
 			else if (document.getElementById("color").value === "green") {ctx.strokeStyle = colorGreen;}
 			else if (document.getElementById("color").value === "brown") {ctx.strokeStyle = colorBrown;}
 			else if (document.getElementById("color").value === "yellow") {ctx.strokeStyle = colorYellow;}
-
-
-			ctx.stroke();
-		}
 	}
 
 	function redrawAllPoints(data) {
@@ -89,12 +110,11 @@
 		ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
 		ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
 		ctx.closePath();
+		ctx.lineWidth = curRadious;
 		ctx.strokeStyle = curColor;
-		if (document.getElementById("color").value === "purple") {ctx.strokeStyle = colorPurple;}
-		else if (document.getElementById("color").value === "green") {ctx.strokeStyle = colorGreen;}
-		else if (document.getElementById("color").value === "brown") {ctx.strokeStyle = colorBrown;}
-		else if (document.getElementById("color").value === "yellow") {ctx.strokeStyle = colorYellow;}
-
+		ctx.lineWidth = curRadious;
+		ctx.strokeStyle = curColor;
+		setColor();
 		ctx.stroke();
 	}
 
