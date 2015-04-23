@@ -20,7 +20,7 @@
 	var radL = 5;
 	var radXL = 10;
 
-	var curRadious = radS;
+	var curRadius = radS;
 
 	var curColor = colorBlack;
 
@@ -58,32 +58,11 @@
 		downloadCanvas(this, 'mainCanvas', 'test.png');
 	}, false);
 
-	function drawLatestPoints() {
-		if (drawnPoints.length > 1) {
-			var pointA = drawnPoints[drawnPoints.length - 1];
-			var pointB = drawnPoints[drawnPoints.length - 2];
-
-			var xOffset = (window.innerWidth - canvas.width) / 2;
-			
-			ctx.beginPath();			
-			ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
-			ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
-			ctx.closePath();
-
-			ctx.lineWidth = curRadious;
-
-			ctx.strokeStyle = curColor;
-			setLength();
-			setColor();
-			ctx.stroke();
-		}
-	}
-
-	function setLength(){
-		if (document.getElementById("radious").value === "small") {ctx.lineWidth = radS;}
-			else if (document.getElementById("radious").value === "medium") {ctx.lineWidth = radM;}
-			else if (document.getElementById("radious").value === "large") {ctx.lineWidth = radL;}
-			else if (document.getElementById("radious").value === "xlarge") {ctx.lineWidth = radXL;}
+	function setRadius(){
+		if (document.getElementById("radius").value === "small") {ctx.lineWidth = radS;}
+			else if (document.getElementById("radius").value === "medium") {ctx.lineWidth = radM;}
+			else if (document.getElementById("radius").value === "large") {ctx.lineWidth = radL;}
+			else if (document.getElementById("radius").value === "xlarge") {ctx.lineWidth = radXL;}
 	}
 	
 
@@ -94,6 +73,61 @@
 			else if (document.getElementById("color").value === "yellow") {ctx.strokeStyle = colorYellow;}
 	}
 
+	function drawLatestPoints() {
+		if (drawnPoints.length > 1) {
+			var pointA = drawnPoints[drawnPoints.length - 1];
+			var pointB = drawnPoints[drawnPoints.length - 2];
+
+			var xOffset = (window.innerWidth - canvas.width) / 2;
+
+			ctx.lineWidth = curRadius;
+			ctx.strokeStyle = curColor;
+			setRadius();
+			setColor();
+			
+
+			ctx.beginPath();			
+			ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
+			ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
+			ctx.closePath();
+			ctx.stroke();
+
+			if (document.getElementById("dtool").value==="pencil") {
+				ctx.beginPath();			
+				ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
+				ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
+				ctx.closePath();
+				ctx.stroke();
+			} else if (document.getElementById("dtool").value==="eraser") {
+				ctx.beginPath();			
+				ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
+				ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
+				ctx.closePath();
+				ctx.strokeStyle = "#ffffff";
+				ctx.fillStyle = "#ffffff";
+				ctx.stroke();
+			} else if (document.getElementById("dtool").value==="circle"){
+				var radius1 = Math.sqrt(Math.pow((pointA.x - pointB.x), 2)
+                 + Math.pow((pointA.y - pointB.y), 2));
+                ctx.beginPath();
+                ctx.arc(pointB.x, pointB.y, radius1, 0, Math.PI * 2, false);
+                ctx.stroke();
+			}else if (document.getElementById("dtool").value==="rect"){
+				ctx.beginPath();
+                ctx.rect(pointA.x, pointA.y, pointB.x 
+                    - pointA.x, pointB.y - pointA.y);
+                ctx.stroke();
+			}/*else if (document.getElementById("dtool").value==="line"){
+				ctx.beginPath();
+                ctx.moveTo(pointA.x, pointA.y);
+                ctx.lineTo(pointB.x, pointB.y);
+                ctx.stroke();*/
+			}
+			
+		}
+	}
+
+	
 	function redrawAllPoints(data) {
 		if (data.fresh) receivedPoints = [];
 
@@ -106,20 +140,53 @@
 
 		var xOffset = (window.innerWidth - canvas.width) / 2;
 		
+		//ctx.lineWidth = data.radius;
+		//ctx.strokeStyle = data.color;
+		
+
 		ctx.beginPath();
 		ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
 		ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
 		ctx.closePath();
-		ctx.lineWidth = curRadious;
-		ctx.strokeStyle = curColor;
-		ctx.lineWidth = curRadious;
-		ctx.strokeStyle = curColor;
-		setColor();
 		ctx.stroke();
+
+		if (document.getElementById("dtool").value==="pencil") {
+				ctx.beginPath();			
+				ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
+				ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
+				ctx.closePath();
+				ctx.stroke();
+			} else if (document.getElementById("dtool").value==="eraser") {
+				ctx.beginPath();			
+				ctx.moveTo(pointA.x - xOffset, pointA.y - 50);
+				ctx.lineTo(pointB.x - xOffset, pointB.y - 50);
+				ctx.closePath();
+				ctx.strokeStyle = "#ffffff";
+				ctx.fillStyle = "#ffffff";
+				ctx.stroke();
+			} else if (document.getElementById("dtool").value==="circle"){
+				var radius1 = Math.sqrt(Math.pow((pointA.x - pointB.x), 2)
+                 + Math.pow((pointA.y - pointB.y), 2));
+                ctx.beginPath();
+                ctx.arc(pointB.x, pointB.y, radius1, 0, Math.PI * 2, false);
+                ctx.stroke();
+			}else if (document.getElementById("dtool").value==="rect"){
+				ctx.beginPath();
+                ctx.rect(pointA.x, pointA.y, pointB.x 
+                    - pointA.x, pointB.y - pointA.y);
+                ctx.stroke();
+			}/*else if (document.getElementById("dtool").value==="line"){
+				ctx.beginPath();
+                ctx.moveTo(pointA.x, pointA.y);
+                ctx.lineTo(pointB.x, pointB.y);
+                ctx.stroke();
+			}*/
+
+		
 	}
 
 	function transmitLatestPoints() {
-		var pointToSend = drawnPoints[drawnPoints.length - 1];
+		var pointToSend = drawnPoints[drawnPoints.length - 1] ;
 		if (drawnPoints.length == 1) pointToSend.fresh = true;
 
 		socket.emit("points", pointToSend, function() {
